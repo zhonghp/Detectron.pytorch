@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import xml.etree.ElementTree as ET
 
@@ -166,13 +167,16 @@ def parseXmlFiles(xml_path):
                     bbox.append(bndbox['xmax'] - bndbox['xmin'])
                     # h
                     bbox.append(bndbox['ymax'] - bndbox['ymin'])
-                    print('add annotation with {},{},{},{}'.format(object_name, current_image_id, current_category_id,
-                                                                   bbox))
+                    print('add annotation with {},{},{},{}'.format(object_name, current_image_id,
+                                                                   current_category_id, bbox))
                     addAnnoItem(object_name, current_image_id, current_category_id, bbox)
 
 
 if __name__ == '__main__':
-    xml_path = 'Annotations'
-    json_file = 'instances.json'
+    if len(sys.argv) != 3:
+        print 'Usage: python {} [xml_folder] [output_file]'.format(sys.argv[0].strip())
+        sys.exit(1)
+    xml_path = sys.argv[1].strip()
+    json_file = sys.argv[2].strip()
     parseXmlFiles(xml_path)
     json.dump(coco, open(json_file, 'w'))
